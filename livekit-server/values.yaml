@@ -64,9 +64,12 @@ nameOverride: ""
 fullnameOverride: ""
 
 loadBalancer:
+  # type can be: disable, aws, alb, gke, gke-managed-cert, gke-vpc-native, do, gclb, azure
   type: disable
   servicePort: 80
   annotations: {}
+  ingress:
+    enabled: true
 
 turnLoadbalancer:
   enable: true

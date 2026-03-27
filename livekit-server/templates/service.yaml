@@ -18,9 +18,9 @@ metadata:
     cloud.google.com/neg: '{"ingress": true}'
   {{- end }}
 spec:
-  {{- if or (eq .Values.loadBalancer.type "alb") (eq .Values.loadBalancer.type "gke") (eq .Values.loadBalancer.type "gke-managed-cert") (eq .Values.loadBalancer.type "do") (eq .Values.loadBalancer.type "gclb")}}
+  {{- if or (eq .Values.loadBalancer.type "alb") (eq .Values.loadBalancer.type "gke") (eq .Values.loadBalancer.type "gke-managed-cert") (eq .Values.loadBalancer.type "do") (eq .Values.loadBalancer.type "gclb") }}
   type: NodePort
-  {{- else if eq .Values.loadBalancer.type "aws" }}
+  {{- else if or (eq .Values.loadBalancer.type "aws") (eq .Values.loadBalancer.type "azure") }}
   type: LoadBalancer
   {{- end }}
   ports:
@@ -28,13 +28,13 @@ spec:
       targetPort: http
       protocol: TCP
       name: http
-    {{- if and (or (eq .Values.loadBalancer.type "disable") (eq .Values.loadBalancer.type "gclb")) .Values.livekit.rtc.tcp_port }}
+    {{- if and (or (eq .Values.loadBalancer.type "disable") (eq .Values.loadBalancer.type "gclb") (eq .Values.loadBalancer.type "azure")) .Values.livekit.rtc.tcp_port }}
     - name: rtc-tcp
       port: {{ .Values.livekit.rtc.tcp_port }}
       protocol: TCP
       targetPort: rtc-tcp
     {{- end }}
-    {{- if and (or (eq .Values.loadBalancer.type "disable") (eq .Values.loadBalancer.type "gclb")) .Values.livekit.rtc.udp_port }}
+    {{- if and (or (eq .Values.loadBalancer.type "disable") (eq .Values.loadBalancer.type "gclb") (eq .Values.loadBalancer.type "azure")) .Values.livekit.rtc.udp_port }}
     - name: rtc-udp
       port: {{ .Values.livekit.rtc.udp_port }}
       protocol: UDP
