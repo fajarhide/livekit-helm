@@ -40,6 +40,16 @@ spec:
       protocol: UDP
       targetPort: rtc-udp
     {{- end }}
+    {{- if or (eq .Values.loadBalancer.type "azure") }}
+    - name: turn-udp
+      port: {{ .Values.livekit.turn.udp_port | default 3478 }}
+      protocol: UDP
+      targetPort: turn-udp
+    - name: turn-tcp
+      port: {{ .Values.livekit.turn.tcp_port | default 3478 }}
+      protocol: TCP
+      targetPort: turn-tcp
+    {{- end }}
     {{- if .Values.livekit.prometheus_port }}
     - port: {{ .Values.livekit.prometheus_port }}
       targetPort: metrics
